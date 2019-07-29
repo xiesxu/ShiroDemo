@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangls.blog.dao.UserDao">
+
+	
+	<insert id="createUser" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_users (username,password,salt)
+		values (#{username},#{password},#{salt})
+	</insert>
+	
+	<select id="findOne" resultType="User">
+		select * from sys_users 
+		where id = #{id}
+	</select>
+	
+	<update id="updateUser">
+		update sys_users set password = #{password}  where id = #{id}  
+	</update>
+	
+	<select id="findByUsername" resultType="User">
+		select * from sys_users 
+		where username = #{username}
+	</select>
+	
+	<select id="findRoles" resultType="String">
+		SELECT
+			role
+		FROM
+			sys_users u,
+			sys_roles r,
+			sys_users_roles ur
+		WHERE
+			u.username = #{username}
+		AND u.id = ur.user_id
+		AND r.id = ur.role_id
+	</select>
+	
+	
+	<select id="findPermissions" resultType="String">
+		SELECT
+			permission
+		FROM
+			sys_users u,
+			sys_roles r,
+			sys_permissions p,
+			sys_users_roles ur,
+			sys_roles_permissions rp
+		WHERE
+			u.username = #{username}
+		AND u.id = ur.user_id
+		AND r.id = ur.role_id
+		AND r.id = rp.role_id
+		AND p.id = rp.permission_id
+	</select>
+	
+</mapper>
